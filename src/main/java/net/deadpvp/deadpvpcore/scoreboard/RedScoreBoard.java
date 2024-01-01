@@ -34,7 +34,7 @@ public class RedScoreBoard {
             team.setCanSeeFriendlyInvisibles(false);
         }
         String prefix = rank.rankToFormat();
-        if(!prefix.isEmpty()){
+        if(prefix.length() != 2){
             prefix = prefix + " ";
         }
         if(!team.getPrefix().equals(prefix)){

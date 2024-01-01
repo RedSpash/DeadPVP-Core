@@ -59,6 +59,9 @@ public class PlayerListener implements Listener {
                 deadPvpPlayer.getPlayerRank().rankToFormat()+
                 rankIsFull+
                 p.getName());
+
+        this.playerManager.removePlayer(p);
+        this.scoreboardManager.removePlayer(p);
     }
 
 
@@ -81,6 +84,8 @@ public class PlayerListener implements Listener {
                 .replace("{message}", color+e.getMessage()
                 )
         );
+
+        scoreboardManager.updateAll();
     }
 
 }

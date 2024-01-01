@@ -16,12 +16,21 @@ public class ScoreboardManager {
         this.scoreBoardHashMap = new HashMap<>();
     }
 
-
     public void update(Player p) {
         if(!this.scoreBoardHashMap.containsKey(p.getUniqueId())){
             this.scoreBoardHashMap.put(p.getUniqueId(),new RedScoreBoard(p,this.playerManager));
         }else{
             this.scoreBoardHashMap.get(p.getUniqueId()).update();
         }
+    }
+
+    public void updateAll() {
+        for(RedScoreBoard scoreBoard : this.scoreBoardHashMap.values()){
+            scoreBoard.update();
+        }
+    }
+
+    public void removePlayer(Player p) {
+        this.scoreBoardHashMap.remove(p.getUniqueId());
     }
 }
