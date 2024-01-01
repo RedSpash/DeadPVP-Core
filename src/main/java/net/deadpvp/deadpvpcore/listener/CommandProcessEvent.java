@@ -1,41 +1,20 @@
 package net.deadpvp.deadpvpcore.listener;
 
-import net.deadpvp.deadpvpcore.authorizedcommands.AuthorizedCommandsConfig;
-import net.deadpvp.deadpvpcore.sql.SQLManager;
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
-import java.io.IOException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class CommandProcessEvent implements Listener {
 
+    private final String defaultMessageError;
+    private final List<String> lockedCommands = Arrays.asList("?","help","op","list","me","msg","seed","teammsg","tm","w","tell","w");
 
-
-    private final SQLManager sqlManager;
-    private final AuthorizedCommandsConfig authorizedCommandsConfig;
-    private String defaultMessageError;
-
-    public CommandProcessEvent(SQLManager sqlManager, AuthorizedCommandsConfig authorizedCommandsConfig) {
-        this.sqlManager = sqlManager;
-        this.authorizedCommandsConfig = authorizedCommandsConfig;
-        try {
-            this.setDefaultMessageError();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void setDefaultMessageError() throws SQLException {
-        PreparedStatement statement = this.sqlManager.getConnection().prepareStatement("SELECT value FROM settings WHERE id = 'server.command.unknown'");
-        ResultSet resultSet = statement.executeQuery();
-        resultSet.next();
-        this.defaultMessageError = resultSet.getString("value");
-        statement.close();
+    public CommandProcessEvent() {
+        this.defaultMessageError = Bukkit.spigot().getConfig().getString("messages.unknown-command");
     }
 
     @EventHandler
@@ -55,16 +34,12 @@ public class CommandProcessEvent implements Listener {
             }
         }
 
-        boolean authorized = false;
-        for(String command : this.authorizedCommandsConfig.getEnableCommands()){
+        for(String command : this.lockedCommands){
             if(message.startsWith(command.toLowerCase())){
-                authorized = true;
-                break;
+                e.getPlayer().sendMessage(this.defaultMessageError);
+                e.setCancelled(true);
+                return;
             }
-        }
-        if(!authorized){
-            e.getPlayer().sendMessage(this.defaultMessageError);
-            e.setCancelled(true);
         }
     }
 }
