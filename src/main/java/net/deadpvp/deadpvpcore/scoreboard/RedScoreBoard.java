@@ -3,57 +3,51 @@ package net.deadpvp.deadpvpcore.scoreboard;
 import net.deadpvp.deadpvpcore.DeadPvpPlayer;
 import net.deadpvp.deadpvpcore.players.PlayerManager;
 import net.deadpvp.deadpvpcore.rank.Rank;
+import net.deadpvp.deadpvpcore.vanish.VanishManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+import java.util.UUID;
+
 public class RedScoreBoard {
 
-    private final Scoreboard board;
-    private final PlayerManager playerManager;
+    private Scoreboard board;
+    private final UUID playerUUID;
 
-    public RedScoreBoard(Player p, PlayerManager playerManager){
+    public RedScoreBoard(Player p){
         this.board = p.getScoreboard();
-        this.playerManager = playerManager;
-        this.update();
+        this.playerUUID = p.getUniqueId();
     }
 
-    void update() {
-        for(Player p : Bukkit.getOnlinePlayers()){
-            DeadPvpPlayer deadPvpPlayer = this.playerManager.getData(p.getUniqueId());
-            this.setTeam(p,deadPvpPlayer.getRankPower(),deadPvpPlayer.getPrefix(), deadPvpPlayer.getPlayerRank());
-        }
-    }
 
-    public void setTeam(Player p,int power, String teamName, Rank rank){
+    public void setTeam(Player p,int power, String teamName, String prefix, ChatColor teamColor){
+        this.checkBoard();
+
         Team team = this.board.getTeam(power+"-"+teamName);
         if(team == null){
             team = this.board.registerNewTeam(power+"-"+teamName);
             team.setCanSeeFriendlyInvisibles(false);
         }
-        String prefix = rank.rankToFormat();
         if(prefix.length() != 2){
             prefix = prefix + " ";
         }
         if(!team.getPrefix().equals(prefix)){
             team.setPrefix(prefix);
-            ChatColor color = null;
-            for(ChatColor chatColor : ChatColor.values()){
-                if(("§"+chatColor.getChar()).equals(rank.getColor())){
-                    color = chatColor;
-                    break;
-                }
-            }
-            if(color != null){
-                team.setColor(color);
+            if(teamColor != null){
+                team.setColor(teamColor);
             }
         }
         team.addEntry(p.getName());
     }
 
-    public Scoreboard getBoard() {
-        return board;
+    private void checkBoard() {
+        Player p = Bukkit.getPlayer(playerUUID);
+        if(p != null && p.isOnline() && this.board != p.getScoreboard()){
+            this.board = p.getScoreboard();
+            Bukkit.broadcastMessage("updated");
+        }
     }
 }

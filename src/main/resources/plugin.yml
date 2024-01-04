@@ -4,5 +4,5 @@ main: net.deadpvp.deadpvpcore.DeadPVP_Core
 api-version: '1.20'
 authors: [Red_Spash]
 commands:
-  commands:
-    permission: deadpvp.staff.developer
+  vanish:
+    permission: deadpvp_core.command.vanish
