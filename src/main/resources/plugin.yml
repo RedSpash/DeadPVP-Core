@@ -1,8 +1,32 @@
 name: DeadPVP-Core
 version: '${project.version}'
-main: net.deadpvp.deadpvpcore.DeadPVP_Core
+main: net.deadpvp.deadpvpcore.DeadPVPCore
 api-version: '1.20'
 authors: [Red_Spash]
 commands:
   vanish:
     permission: deadpvp_core.command.vanish
+  god:
+    permission: deadpvp_core.command.god
+  enderchest:
+    aliases:
+      - ec
+    permission: deadpvp_core.command.enderchest
+  feed:
+    permission: deadpvp_core.command.feed
+  heal:
+    permission: deadpvp_core.command.heal
+  gmc:
+    permission: deadpvp_core.command.gmc
+  gma:
+    permission: deadpvp_core.command.gma
+  gmsp:
+    permission: deadpvp_core.command.gmsp
+  gms:
+    permission: deadpvp_core.command.gms
+  getpos:
+    permission: deadpvp_core.command.getpos
+  ptime:
+    permission: deadpvp_core.command.ptime
+  pweather:
+    permission: deadpvp_core.command.pweather

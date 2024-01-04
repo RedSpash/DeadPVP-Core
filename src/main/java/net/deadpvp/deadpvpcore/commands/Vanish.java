@@ -17,11 +17,11 @@ public class Vanish implements CommandExecutor {
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if(commandSender instanceof Player p){
             if(this.vanishManager.isVanish(p.getUniqueId())){
-                this.vanishManager.vanish(p);
-                p.sendMessage("§aVous êtes désormais en vanish!");
-            }else {
                 this.vanishManager.unVanish(p);
                 p.sendMessage("§aVous n'êtes plus en vanish!");
+            }else {
+                this.vanishManager.vanish(p);
+                p.sendMessage("§aVous êtes désormais en vanish!");
             }
             return true;
         }
