@@ -30,3 +30,5 @@ commands:
     permission: deadpvp_core.command.ptime
   pweather:
     permission: deadpvp_core.command.pweather
+  nick:
+    permission: deadpvp_core.command.nick

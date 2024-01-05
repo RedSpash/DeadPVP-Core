@@ -11,7 +11,7 @@ import java.util.List;
 public class CommandProcessEvent implements Listener {
 
     private final String defaultMessageError;
-    private final List<String> lockedCommands = Arrays.asList("?","help","op","list","me","msg","seed","teammsg","tm","w","tell");
+    private final List<String> lockedCommands = Arrays.asList("?","help","op","list","me","msg","seed","teammsg","tm","w","tell","pl","plugins");
 
     public CommandProcessEvent() {
         this.defaultMessageError = Bukkit.spigot().getConfig().getString("messages.unknown-command");

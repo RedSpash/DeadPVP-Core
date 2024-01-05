@@ -43,6 +43,8 @@ public final class DeadPVPCore extends JavaPlugin {
         getCommand("ptime").setExecutor(new PTime());
         getCommand("pweather").setExecutor(new PWeather());
 
+        getCommand("nick").setExecutor(new Nick(this, scoreboardManager));
+
         for(Player p : Bukkit.getOnlinePlayers()){
             playerManager.insertIfNotExists(p);
             scoreboardManager.update(p);

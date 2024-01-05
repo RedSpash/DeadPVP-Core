@@ -23,7 +23,7 @@ public class RedScoreBoard {
     }
 
 
-    public void setTeam(Player p,int power, String teamName, String prefix, ChatColor teamColor){
+    public void setTeam(Player p, int power, String teamName, String prefix, ChatColor teamColor){
         this.checkBoard();
 
         Team team = this.board.getTeam(power+"-"+teamName);
@@ -35,12 +35,19 @@ public class RedScoreBoard {
             prefix = prefix + " ";
         }
         if(!team.getPrefix().equals(prefix)){
+            Bukkit.broadcastMessage("changed");
             team.setPrefix(prefix);
             if(teamColor != null){
                 team.setColor(teamColor);
             }
         }
-        team.addEntry(p.getName());
+        if(!team.hasEntry(p.getName())){
+            Bukkit.broadcastMessage("added "+p.getName()+" to entries");
+            team.addEntry(p.getName());
+        }
+        for(String entrie : team.getEntries()){
+            Bukkit.broadcastMessage(entrie);
+        }
     }
 
     private void checkBoard() {
