@@ -35,7 +35,7 @@ public class CommandProcessEvent implements Listener {
         }
 
         for(String command : this.lockedCommands){
-            if(message.startsWith(command.toLowerCase())){
+            if((message+" ").startsWith(command.toLowerCase()+" ")){
                 e.getPlayer().sendMessage(this.defaultMessageError);
                 e.setCancelled(true);
                 return;
