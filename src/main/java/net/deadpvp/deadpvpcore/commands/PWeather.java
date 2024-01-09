@@ -17,7 +17,7 @@ import java.util.List;
 
 import static java.util.stream.Collectors.joining;
 
-public class PWeather implements CommandExecutor, TabCompleter {
+public class PWeather implements CommandExecutor {
 
     public static final String OTHER_PERMISSION = "deadpvp_core.command.ptime.other";
     private final HashMap<String, WeatherType> values = new HashMap<>();
@@ -70,19 +70,5 @@ public class PWeather implements CommandExecutor, TabCompleter {
             return true;
         }
         return false;
-    }
-
-    @Override
-    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
-        if(strings.length <= 1){
-            List<String> list = new ArrayList<>(this.values.keySet().stream().toList());
-            if(strings.length == 1){
-                list.removeIf(element -> !element.startsWith(strings[0]));
-            }
-            return list;
-        } else if (commandSender.hasPermission(OTHER_PERMISSION)) {
-            return Bukkit.getOnlinePlayers().stream().map(Player::getName).toList();
-        }
-        return Collections.emptyList();
     }
 }

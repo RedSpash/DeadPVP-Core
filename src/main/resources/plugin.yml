@@ -32,3 +32,5 @@ commands:
     permission: deadpvp_core.command.pweather
   nick:
     permission: deadpvp_core.command.nick
+  suicide:
+    permission: deadpvp_core.command.suicide

@@ -1,6 +1,9 @@
 package net.deadpvp.deadpvpcore;
 
 import net.deadpvp.deadpvpcore.commands.*;
+import net.deadpvp.deadpvpcore.commands.tabcompleter.ConstantComplete;
+import net.deadpvp.deadpvpcore.commands.tabcompleter.OnlinePlayersCompleter;
+import net.deadpvp.deadpvpcore.commands.tabcompleter.SimpleTabCompleter;
 import net.deadpvp.deadpvpcore.listener.CommandProcessEvent;
 import net.deadpvp.deadpvpcore.listener.PlayerListener;
 import net.deadpvp.deadpvpcore.players.PlayerManager;
@@ -40,8 +43,13 @@ public final class DeadPVPCore extends JavaPlugin {
         getCommand("gma").setExecutor(new GamemodeShortCut(GameMode.ADVENTURE));
         getCommand("gms").setExecutor(new GamemodeShortCut(GameMode.SURVIVAL));
         getCommand("getpos").setExecutor(new GetPos());
-        getCommand("ptime").setExecutor(new PTime());
+        PTime pTime = new PTime();
+        getCommand("ptime").setExecutor(pTime);
+        getCommand("ptime").setTabCompleter(
+                new SimpleTabCompleter(new ConstantComplete("",pTime.getValues()), new OnlinePlayersCompleter(PTime.OTHER_PERMISSION))
+        );
         getCommand("pweather").setExecutor(new PWeather());
+        getCommand("suicide").setExecutor(new Suicide());
 
         getCommand("nick").setExecutor(new Nick(this, scoreboardManager));
 

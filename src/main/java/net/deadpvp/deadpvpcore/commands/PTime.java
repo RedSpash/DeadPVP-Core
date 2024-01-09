@@ -1,5 +1,9 @@
 package net.deadpvp.deadpvpcore.commands;
 
+import net.deadpvp.deadpvpcore.commands.tabcompleter.ConstantComplete;
+import net.deadpvp.deadpvpcore.commands.tabcompleter.OnlinePlayersCompleter;
+import net.deadpvp.deadpvpcore.commands.tabcompleter.SimpleTabCompleter;
+import net.deadpvp.deadpvpcore.commands.tabcompleter.TabComplete;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -11,7 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class PTime implements CommandExecutor, TabCompleter {
+public class PTime implements CommandExecutor {
 
     public static final String OTHER_PERMISSION = "deadpvp_core.command.ptime.other";
     private final HashMap<String,Integer> values = new HashMap<>();
@@ -81,18 +85,7 @@ public class PTime implements CommandExecutor, TabCompleter {
         }
         return value;
     }
-
-    @Override
-    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
-        if(strings.length <= 1){
-            List<String> list = new ArrayList<>(this.values.keySet().stream().toList());
-            if(strings.length == 1){
-                list.removeIf(element -> !element.startsWith(strings[0]));
-            } else if (commandSender.hasPermission(OTHER_PERMISSION)) {
-                return Bukkit.getOnlinePlayers().stream().map(Player::getName).toList();
-            }
-            return list;
-        }
-        return List.of();
+    public List<String> getValues() {
+        return this.values.keySet().stream().toList();
     }
 }

@@ -31,7 +31,7 @@ public class PlayerListener implements Listener {
 
         this.scoreboardManager.update(p);
 
-        if(e.getJoinMessage() == null)return;
+        if(e.getJoinMessage() != null)return;
 
         DeadPvpPlayer deadPvpPlayer = this.playerManager.getData(p.getUniqueId());
         String rankIsFull = "";
@@ -48,7 +48,7 @@ public class PlayerListener implements Listener {
     public void playerQuitEvent(PlayerQuitEvent e){
         Player p = e.getPlayer();
 
-        if(e.getQuitMessage() == null)return;
+        if(e.getQuitMessage() != null)return;
 
         DeadPvpPlayer deadPvpPlayer = this.playerManager.getData(p.getUniqueId());
         String rankIsFull = "";
