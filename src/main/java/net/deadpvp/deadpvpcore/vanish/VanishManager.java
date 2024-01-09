@@ -54,7 +54,7 @@ public class VanishManager {
             if(vanishedPlayer != null && vanishedPlayer.isOnline()){
                 this.unVanish(vanishedPlayer);
                 vanishedPlayer.setGameMode(GameMode.SPECTATOR);
-                vanishedPlayer.sendMessage("§cVotre vanish vient d'être retiré suite à un redémarrage du plugin. Vous passez donc en specateur!");
+                vanishedPlayer.sendMessage("§cVotre vanish vient d'être retiré suite à un redémarrage du plugin. Vous passez donc en spectateur!");
             }
         }
 

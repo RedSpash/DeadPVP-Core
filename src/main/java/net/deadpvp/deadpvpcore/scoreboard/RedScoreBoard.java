@@ -45,9 +45,6 @@ public class RedScoreBoard {
             Bukkit.broadcastMessage("added "+p.getName()+" to entries");
             team.addEntry(p.getName());
         }
-        for(String entrie : team.getEntries()){
-            Bukkit.broadcastMessage(entrie);
-        }
     }
 
     private void checkBoard() {

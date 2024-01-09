@@ -1,7 +1,6 @@
 package net.deadpvp.deadpvpcore.commands;
 
 import net.deadpvp.deadpvpcore.DeadPVPCore;
-import net.deadpvp.deadpvpcore.scoreboard.RedScoreBoard;
 import net.deadpvp.deadpvpcore.scoreboard.ScoreboardManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -27,7 +26,7 @@ public class Nick implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if(strings.length == 1 && commandSender instanceof Player p){
-            p.setPlayerListName(strings[0]);
+            //p.setPlayerListName(strings[0]);
             p.setDisplayName(strings[0]);
             this.changeName(p,strings[0],false);
             p.sendMessage("§aPseudo changé en "+strings[0]);
@@ -46,10 +45,10 @@ public class Nick implements CommandExecutor {
             ff.setAccessible(true);
             ff.set(profile, name);
             if (!disabling) {
-                Iterator var6 = Bukkit.getOnlinePlayers().iterator();
+                Iterator<? extends Player> var6 = Bukkit.getOnlinePlayers().iterator();
 
                 while(var6.hasNext()) {
-                    Player p = (Player)var6.next();
+                    Player p = var6.next();
                     if (p.canSee(player)) {
                         p.hidePlayer(this.deadPVPCore, player);
                         p.showPlayer(this.deadPVPCore, player);

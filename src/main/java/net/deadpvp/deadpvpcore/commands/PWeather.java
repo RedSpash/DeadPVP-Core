@@ -7,73 +7,82 @@ import org.bukkit.WeatherType;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-public class PWeather implements CommandExecutor {
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+
+import static java.util.stream.Collectors.joining;
+
+public class PWeather implements CommandExecutor, TabCompleter {
+
+    public static final String OTHER_PERMISSION = "deadpvp_core.command.ptime.other";
+    private final HashMap<String, WeatherType> values = new HashMap<>();
+
+    public PWeather(){
+        this.values.put("pluie",WeatherType.DOWNFALL);
+        this.values.put("ensoleillé", WeatherType.CLEAR);
+        this.values.put("reset", null);
+    }
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if(commandSender instanceof Player p){
-            if(strings.length == 1){
-                WeatherType type = this.getWeatherType(strings[0]);
-
-                if(type == null){
-                    if(strings[0].equalsIgnoreCase("off")){
-                        p.resetPlayerWeather();
-                        p.sendMessage("§aLa météo vient d'être réinitialisée!");
+            if(strings.length > 0 ){
+                Player target = p;
+                if(strings.length == 2 && p.hasPermission("deadpvp_core.command.pweather.other")) {
+                    target = Bukkit.getPlayer(strings[1]);
+                    if(target == null || !target.isOnline()) {
+                        p.sendMessage("§cErreur: Joueur introuvable!");
                         return true;
                     }
-                    p.sendMessage("§cLa météo doit être une des valeurs suivantes: "+this.getPossibilities());
-                }else{
-                    p.setPlayerWeather(type);
-                    p.sendMessage("§aVotre météo vient d'être mise à "+type.name());
                 }
-                return true;
-            } else if (strings.length == 2) {
-                if (p.hasPermission("deadpvp_core.command.pweather.other")) {
-                    Player target = Bukkit.getPlayer(strings[0]);
-                    if(target != null && !target.isOnline()){
-                        try{
-                            int time = Integer.parseInt(strings[1]);
-                            target.setPlayerTime(time,false);
-                            target.sendMessage("§aVotre temps vient d'être positionné à "+time+" par "+p.getName());
-                            p.sendMessage("§aVous venez de positionner le temps de "+target.getName()+" à "+time);
-                        }catch (Exception ignored){
-                            p.sendMessage("§cLe temps doit être un nombre ou off pour être désactiver");
+                String value = strings[0].toLowerCase();
+                if(this.values.containsKey(value)){
+                    WeatherType weatherType = this.values.get(value);
+                    if(weatherType == null){
+                        target.resetPlayerWeather();
+                        if(!p.getUniqueId().equals(target.getUniqueId())){
+                            p.sendMessage("§aLa météo de "+target.getName()+" est désormais synchronisée avec le serveur!");
                         }
+                        target.sendMessage("§aVotre météo est désormais synchronisée avec le serveur!");
                     }else{
-                        p.sendMessage("§cLe joueur est introuvable!");
+                        target.setPlayerWeather(weatherType);
+                        if(!p.getUniqueId().equals(target.getUniqueId())){
+                            p.sendMessage("§aLa météo de "+target.getName()+" est désormais "+value+"!");
+                        }
+                        target.sendMessage("§aVotre météo est désormais "+value+"!");
                     }
-                    return true;
-                }
-                return false;
-            }else{
-                if(p.hasPermission("deadpvp_core.command.getpos.other")){
-                    p.sendMessage("§c/ptime <player> <time>");
                 }else{
-                    p.sendMessage("§c/ptime <time>");
+                    p.sendMessage("§cLa météo doit être "+String.join(" ou ", this.values.keySet())+" !");
+                    return false;
+                }
+            }else{
+                if(p.hasPermission(OTHER_PERMISSION)){
+                    p.sendMessage("§c/pweather <meteo> <player>");
+                }else{
+                    p.sendMessage("§c/pweather <meteo>");
                 }
             }
-            return false;
+            return true;
         }
         return false;
     }
 
-    private String getPossibilities() {
-        StringBuilder possibilities = new StringBuilder();
-        for(WeatherType weatherType : WeatherType.values()){
-            possibilities.append(weatherType.name()).append(", ");
-        }
-        possibilities.append("off");
-        return possibilities.toString();
-    }
-
-    private WeatherType getWeatherType(String string) {
-        for(WeatherType weatherType : WeatherType.values()){
-            if(weatherType.name().equalsIgnoreCase(string)){
-                return weatherType;
+    @Override
+    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
+        if(strings.length <= 1){
+            List<String> list = new ArrayList<>(this.values.keySet().stream().toList());
+            if(strings.length == 1){
+                list.removeIf(element -> !element.startsWith(strings[0]));
             }
+            return list;
+        } else if (commandSender.hasPermission(OTHER_PERMISSION)) {
+            return Bukkit.getOnlinePlayers().stream().map(Player::getName).toList();
         }
-        return null;
+        return Collections.emptyList();
     }
 }
